@@ -1,0 +1,610 @@
+<apex:page showHeader="true" sidebar="true" standardStylesheets="false" standardController="Booking_Item__c" extensions="Package_ProductLineItemsController">
+
+    <html lang="en-US"  ng-app="myApp">
+        <style>
+                table, th , td {
+                  border-collapse: collapse;
+                  padding: 20px;
+                }
+                table tr:nth-child(odd) {
+                }
+                table tr:nth-child(even) {
+                }
+                
+
+        </style>
+                <style type="text/css" >
+            #exTab1 .nav-pills > li > a {
+              border-radius: 0;
+            }
+
+            /* change border radius for the tab , apply corners on top*/
+
+            #exTab3 .nav-pills > li > a {
+              border-radius: 4px 4px 0 0 ;
+            }
+
+            #exTab3 .tab-content {
+              color : white;
+              background-color: #428bca;
+              padding : 5px 15px;
+            }
+            a,
+                a label {
+                    cursor: pointer;
+                }
+              button.accordion {
+                color: #444;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                border: none;
+                text-align: center;
+                outline: none;
+                font-size: 15px;
+                transition: 0.4s;
+            }
+            
+            button.accordion.active, button.accordion:hover {
+                background-color: #ddd;
+            }
+            
+            button.accordion:after {
+                content: '\02795';
+                font-size: 13px;
+                color: #777;
+                float: right;
+                margin-left: 5px;
+            }
+            
+            button.accordion.active:after {
+                content: "\2796";
+            }
+            
+            div.panel {
+                padding: 0 18px;
+                background-color: white;
+                max-height: 0;
+                overflow: hidden;
+                transition: 0.6s ease-in-out;
+                opacity: 0;
+            }
+            
+            div.panel.show {
+                opacity: 1;
+                max-height: 500px;  
+
+            }
+            
+        </style>
+        <style type="text/css" >
+            #exTab1 .nav-pills > li > a {
+              border-radius: 0;
+            }
+
+            /* change border radius for the tab , apply corners on top*/
+
+            #exTab3 .nav-pills > li > a {
+              border-radius: 4px 4px 0 0 ;
+            }
+
+            #exTab3 .tab-content {
+              color : white;
+              background-color: #428bca;
+              padding : 5px 15px;
+            }
+            div.col-xs-2 {
+                            width: 15.666667%;
+                        }
+             div.col-xs-1 {
+                            width: 10.333333%;
+                }
+            .labelweight{
+                    font-weight: 100;
+                }
+                .btn:hover
+                {
+                background-image:none !important;
+                background-color:lightgreen !important;
+                }
+
+            
+        </style>
+            <!-- JavaScript -->
+        <script src="//cdn.jsdelivr.net/alertifyjs/1.9.0/alertify.min.js"></script>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.9.0/css/alertify.min.css"/>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <body ng-controller="cont">
+        <div class="ng-cloak">
+        <br/>
+        <div class="row">
+        <div class = "col-xs-12"><label class="labelweight" style="font-size: 140%;margin-left: 2%;font-weight:bold">{{controllerArray[0].Name}}</label></div>
+        <div class="row">
+            <button type="submit" class="btn btn-primary" ng-click="savevalue();" style="margin-left: 35%;background: #FEFEFE ;color: black;width: 10%;padding: 5px 0px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;-webkit-transition-duration: 0.4s; transition-duration: 0.4s;cursor: pointer;">Save</button>
+            <button type="submit" class="btn btn-primary" ng-click="cancelButton();" style="background: #FEFEFE ;color: black;width: 10%;padding: 5px 0px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;-webkit-transition-duration: 0.4s; transition-duration: 0.4s;cursor: pointer;">Cancel</button>
+        </div>
+        </div>
+        <!-- ######################################view for Starters############################################### -->
+        <div style="margin-left: -0%;">
+        <div ng-repeat="x in sid">
+        <div class="container" style="border-style: groove;margin-bottom: 1%;width: 100%;border-width: thin;">
+        <div class="row"  style="background-color: #F8F8F8;"  >
+            <label class="labelweight" style="margin-left: 2%;font-size: 16px;"><b>{{x.myKey}}</b></label>
+        </div>
+        <div class="row" style="background-color: #F2F3F3;font-weight:bold">
+        <div class="col-xs-3">
+            <label class="labelweight" style="margin-left: 4%;font-size: 14px">Category</label>
+        </div>
+        <div class="col-xs-2">
+            <label class="labelweight">Quantity</label>
+        </div>
+        <div class="col-xs-2">
+            <label class="labelweight">Standard Price</label>
+        </div>
+        <div class="col-xs-1">
+            <label class="labelweight">Addon(s)</label>
+        </div>
+        <div class="col-xs-2">
+            <label class="labelweight">Rate</label>
+        </div>
+        
+        <div class="col-xs-2">
+            <label class="labelweight">Total Price</label>
+        </div>
+        </div>
+        <div class="row" ng-repeat="y in x.myArray" style="margin-top: 3px; margin-bottom: 1%;">
+        <div class="col-xs-3">
+            <input class="form-control" type="Text" ng-model="y.Menu_TypeN__c" readonly="readonly" style="background-color: white;" />
+        </div>
+        <div class="col-xs-2">
+            <input class="form-control" type="Number" ng-model="y.Package_Quantity__c" readonly="readonly" style="background-color: white;"/>
+        </div>
+        <div class="col-xs-2">
+            <input class="form-control" type="Number" ng-model="y.PricebookPrice" readonly="readonly" style="background-color: white;"/>
+        </div>
+        <div class="col-xs-1">
+            <input class="form-control" type="Number" ng-model="y.Addon_Quantity__c" ng-change="totalsumfinal() " style="width : 132%"/>
+        </div>
+        <div class="col-xs-2">
+            <input class="form-control" type="Number" ng-model="y.Add_on_Unit_Price__c" ng-change="totalsumfinal()"/>
+        </div>
+        
+        <div class="col-xs-2">
+            <input class="form-control" type="Text" ng-model="y.total" readonly="readonly" style="background-color: white;"/>
+        </div>
+        </div>
+        </div>
+
+
+
+        </div>
+        <div class="container" style="border-style: groove;width: 100%;border-width: thin;">
+        <div class="row">
+            <div class = "col-xs-6">
+            <label style="font-size: large;">Standard Price</label>
+            </div>
+            <div class = "col-xs-6">
+            <label style="font-size: large;margin-left: 35%;">Current Price</label>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 1%;">
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="totalpart_A" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+        <input class="form-control" type="Number" ng-model="totalpart_A_Sum" readonly="readonly" style="background-color: white;" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="totalpart_A" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Number" ng-model="totalpart_A_Sum " readonly="readonly" style="background-color: white;" />
+        </div>
+        </div>
+
+
+          <div class="row" style="margin-top: 1%;">
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="AddonStandardPrice" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+        <input class="form-control" type="Number" ng-model="TotalStandardPrice" readonly="readonly" style="background-color: white;" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="totalpart_B" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Number" ng-model="totalpart_B_Sum" readonly="readonly" style="background-color: white;" />
+        </div>
+        </div>
+
+        <div class="row" style="margin-top: 1%;">
+
+         <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="GrossStandard" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+        <input class="form-control" type="Number" ng-model="GrossStandardvalue" readonly="readonly" style="background-color: white;" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="GrossStandard" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold" />
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Number" ng-model="GrossTotal" readonly="readonly" style="background-color: white;" />
+        </div>
+        </div>
+
+
+
+
+        <div class="row" style="margin-bottom: 1%;">
+        <hr style="border-width: 1px;border-color: darkgrey; margin-top: 10px; margin-bottom: 10px;" />
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+            <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="salesPrice" readonly="readonly" style="width: 117%;background-color: white;font-weight:bold"/>
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Number" ng-model="salesPriceValue" style="background-color: white;" ng-change="calculateDiscount()"/>
+        </div>
+
+        </div>
+
+        <div class="row" style="margin-bottom: 1%;">
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+        <div class="col-xs-2" style="width: 16.666667%;"></div>
+            <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="discount" readonly="readonly" style="width: 117%;background-color: #F8F8F8;font-weight:bold"/>
+        </div>
+        <div class="col-xs-2" style="width: 16.666667%;">
+            <input class="form-control" type="Text" ng-model="discountValue" readonly="readonly" style="background-color: white;" />
+        </div>
+
+        </div>
+
+
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-primary" ng-click="savevalue();" style="margin-left: 38%;background: white ;color: black;width: 10%;padding: 5px 0px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;-webkit-transition-duration: 0.4s; transition-duration: 0.4s;cursor: pointer;">Save</button>
+            <button type="submit" class="btn btn-primary" ng-click="cancelButton();" style="background: white ;color: black;width: 10%;padding: 5px 0px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;-webkit-transition-duration: 0.4s; transition-duration: 0.4s;cursor: pointer;">Cancel</button>
+        </div>
+        <!-- </div>  -->
+        </div>
+
+        
+        </div>
+
+
+
+        
+        </body>
+        <script >
+
+            var app1 = angular.module("myApp", []);
+            app1.controller('cont', ['$scope','SidFactory', function($scope,SidFactory){
+                alertify.defaults = {
+                                    // dialogs defaults
+                                    autoReset:true,
+                                    basic:false,
+                                    closable:true,
+                                    closableByDimmer:true,
+                                    frameless:false,
+                                    maintainFocus:true, // <== global default not per instance, applies to all dialogs
+                                    maximizable:true,
+                                    modal:true,
+                                    movable:true,
+                                    moveBounded:false,
+                                    overflow:true,
+                                    padding: true,
+                                    pinnable:true,
+                                    pinned:true,
+                                    preventBodyShift:false, // <== global default not per instance, applies to all dialogs
+                                    resizable:true,
+                                    startMaximized:false,
+                                    transition:'pulse',
+
+                                    // notifier defaults
+                                    notifier:{
+                                        // auto-dismiss wait time (in seconds)  
+                                        delay:5,
+                                        // default position
+                                        position:'bottom-right',
+                                        // adds a close button to notifier messages
+                                        closeButton: false
+                                    },
+
+                                    // language resources 
+                                    glossary:{
+                                        // dialogs default title
+                                        title:'Manage Package Details',
+                                        // ok button text
+                                        ok: 'OK',
+                                        // cancel button text
+                                        cancel: 'Cancel'            
+                                    },
+
+                                    // theme settings
+                                    theme:{
+                                        // class name attached to prompt dialog input textbox.
+                                        input:'ajs-input',
+                                        // class name attached to ok button
+                                        ok:'ajs-ok',
+                                        // class name attached to cancel button 
+                                        cancel:'ajs-cancel'
+                                    }
+                                };
+
+
+                                //controller for Product line items for catogaries
+                                var wrap='{!jsonstring}';
+                                var wrap1='{!jsonstring1}';
+                                var wrap2='{!jsonstring2}';
+                                var sometext=JSON.parse(wrap);
+                                var sometext1=JSON.parse(wrap1);
+                                var sometext2=JSON.parse(wrap2);
+                                $scope.controllerArray=[];
+                                $scope.controllerArray1=[];
+                                $scope.controllerArray2=[];
+                                $scope.controllerArray=sometext;
+                                $scope.controllerArray1=sometext1;
+                                $scope.controllerArray2=sometext2;
+                                $scope.fromDate = new Date($scope.controllerArray[0].Opportunity__r.Booked_From__c);
+                                $scope.toDate = new Date($scope.controllerArray[0].Opportunity__r.Booked_To__c);
+                                $scope.GrossTotal=0;
+                                $scope.resultList1=[];
+                                $scope.TotalSum1=[];
+                                $scope.totalpart_A="Package Price";
+                                $scope.totalpart_A_Sum = 0;
+                                $scope.totalpart_B="Addon Price";
+                                $scope.totalpart_B_Sum=0;
+                                $scope.Gross = "Gross Total";
+                                $scope.AddonStandardPrice = "Addon Price"
+                                $scope.TotalStandardPrice = 0;
+                                $scope.GrossStandard = "Total Price"
+                                $scope.GrossStandardvalue = 0;
+                                $scope.salesPrice = "Sales Price";
+                                $scope.salesPriceValue=0;
+                                $scope.discount = "Discount";
+                                $scope.discountValue = "";
+                                $scope.sid=[];
+                                $scope.savedArray=[];
+
+                                //function for itterating the data accourding to the catagories of the line items
+                            $scope.itterate = function(){
+                                if($scope.controllerArray2[0].UnitPrice != undefined && $scope.controllerArray2[0].UnitPrice != null && $scope.controllerArray2[0].UnitPrice != ""){
+                                $scope.totalpart_A_Sum = $scope.controllerArray2[0].UnitPrice;
+                            }
+                            else{
+                                $scope.totalpart_A_Sum = 0;
+                            }
+
+                            if($scope.controllerArray[0].Booking_Package_Item__r == undefined)
+                            {
+                                  alertify.alert('There is no Record in the Booking Package/Add-Ons').set('onok', function(closeEvent){  top.location.href='/'+'{!$currentpage.parameters.Id}';} ); 
+                            }
+                                angular.forEach($scope.controllerArray[0].Booking_Package_Item__r.records, function(value, key){
+                                    if($scope.controllerArray1[key] != undefined && $scope.controllerArray1[key] != null && $scope.controllerArray1[key] != ""){
+                                    value["PricebookPrice"] = $scope.controllerArray1[key].UnitPrice;
+                                    if(value.Add_on_Unit_Price__c == "" || value.Add_on_Unit_Price__c == null || value.Add_on_Unit_Price__c == undefined){
+                                    value["Add_on_Unit_Price__c"] = $scope.controllerArray1[key].UnitPrice;
+                                    }
+                                }
+                                else{
+                                    value["PricebookPrice"] = 0;
+                                }
+                                });
+                                
+                                angular.forEach($scope.controllerArray[0].Booking_Package_Item__r.records, function(value, key){
+                                        
+                                        $scope.itterate2(value);
+
+                                });
+                            }
+                            //function for itterating the data accourding to the catagories of the line items
+                            $scope.itterate2 = function(value2){
+                                $scope.flag = "true";
+                                if($scope.sid.length==0){
+                                    var a = {"myKey":"" , "myArray":[]};
+                                        a.myKey = value2.Product_Family__c;
+                                        a.myArray.push(value2);
+                                        $scope.sid[0]=a;
+                                }
+                                else{
+                                    angular.forEach($scope.sid, function(value, key){
+                                        if(value.myKey == value2.Product_Family__c && value.myKey != undefined){
+                                            $scope.flag = "false";
+                                            $scope.sid[key]["myArray"].push(value2);
+
+                                        }else{
+                                            
+                                        }
+                                    });
+                                            if($scope.flag == "true"){
+                                            var a = {"myKey":"" , "myArray":[]};
+                                            a["myKey"] = value2.Product_Family__c;
+
+                                            a["myArray"].push(value2);
+                                            $scope.sid[$scope.sid.length]=a;
+                                            }
+
+                                }
+                                $scope.totalsumfinal();
+                            }
+
+                            $scope.cancelButton = function(){
+                              top.location.href='/'+'{!$currentpage.parameters.Id}';  
+                            }
+                            //function for calculating the dynamic TOTAL fields in the UI
+                            $scope.totalsumfinal = function(){
+                                $scope.TotalStandardPrice = 0;
+                                $scope.totalpart_B_Sum = 0;
+                            angular.forEach($scope.sid, function(value1, key){
+                                angular.forEach(value1.myArray, function(value2, key){
+                                    var a = "";
+                                    var b = "";
+                                    if(value2.Addon_Quantity__c == undefined || value2.Add_on_Unit_Price__c == undefined)
+                                    {
+                                        a = 0;
+                                    }
+                                    else{
+                                    a = value2.Addon_Quantity__c * value2.Add_on_Unit_Price__c;
+                                    }
+                                    value2["total"] = a;
+                                    $scope.totalpart_B_Sum += a;
+                                    if(value2.PricebookPrice == undefined || value2.Addon_Quantity__c == undefined){
+                                        b = 0;
+                                    }
+                                    else{
+                                        b = value2.PricebookPrice * value2.Addon_Quantity__c
+                                    }
+                                    value2["totalStandardAddonPrice"] = b;
+                                    $scope.TotalStandardPrice += b;
+                                });
+                                
+                            });
+                            $scope.GrossTotal = $scope.totalpart_A_Sum + $scope.totalpart_B_Sum;
+                            $scope.GrossStandardvalue = $scope.totalpart_A_Sum + $scope.TotalStandardPrice;
+                            if($scope.controllerArray[0].UnitPrice__c == undefined || $scope.controllerArray[0].UnitPrice__c == null || $scope.controllerArray[0].UnitPrice__c == '')
+                            {
+                            $scope.salesPriceValue = $scope.GrossTotal;
+                            }
+                            else{
+                               $scope.salesPriceValue = $scope.controllerArray[0].UnitPrice__c; 
+                            }
+                            $scope.discountValue = 100 -(($scope.salesPriceValue/$scope.GrossStandardvalue)*100)+ '%';
+                        }
+                        $scope.calculateDiscount = function(){
+                            $scope.discountValue = 100 -(($scope.salesPriceValue/$scope.GrossStandardvalue)*100)+ '%';
+                        }
+                        $scope.itterate();
+
+                        //Function for saving the updated data from UI to APEX Controller
+                        $scope.savevalue=function(){
+                        $scope.controllerArray=SidFactory.removeAngularjsKey($scope.controllerArray);
+                        angular.forEach($scope.controllerArray, function(value, key){
+                            delete value["attributes"];
+                            if(value.Opportunity__r!= undefined)
+                            delete value.Opportunity__r["attributes"];
+                        angular.forEach(value.Booking_Package_Item__r.records, function(value1, key){
+                                delete value1["attributes"];
+                        });
+
+                        });
+                        $scope.savedArray = $scope.controllerArray[0].Booking_Package_Item__r.records;
+                        angular.forEach($scope.savedArray, function(value, key){
+                            delete value["total"];
+                            delete value["PricebookPrice"];
+                            delete value["totalStandardAddonPrice"];
+                        });
+                        SidFactory.saveProjectDetails($scope.savedArray).then(
+                                    function(response){
+                                        if( response == 'sucess'){
+                                        $scope.savePrice();
+                                        }else{
+                                        alertify.alert('Error: '+response);
+                                        }
+                                           
+                                        },function(error){
+                                         alertify.alert('Some Error occured ! Try Again' +error);   
+                                     }
+                                    )
+                                }
+
+
+                    $scope.savePrice = function(){
+                        var ListP =  $scope.GrossStandardvalue;
+                        var SalesP = $scope.salesPriceValue;
+                        var recid = '{!$currentpage.parameters.Id}';
+                        SidFactory.saveP(ListP,SalesP,recid).then(
+                                    function(response){
+                                        if( response == 'sucess'){
+                                       top.location.href='/'+'{!$currentpage.parameters.Id}';
+                                        }else{
+                                        alertify.alert('Error: '+response);
+                                        }
+                                           
+                                        },function(error){
+                                         alertify.alert('Some Error occured ! Try Again' +error);   
+                                     }
+                                    )
+
+                    }
+
+
+                                                        
+                
+                
+}]);
+
+
+        // custom factory to call the remoteaction method
+        app1.factory('SidFactory', ['$q', '$log', function($q, $log){
+        var service={};
+        service.removeAngularjsKey = function(targetData) {
+                    var toJson = angular.toJson(targetData);
+                    var fromJson = angular.fromJson(toJson);
+                    
+                    return fromJson;
+                    }
+        service.saveProjectDetails = function(opplist){
+        var defer = $q.defer();
+        
+        Package_ProductLineItemsController.uploadResume(opplist,function(result, event) {
+        if (event.status) {
+        
+        defer.resolve(result);
+        
+        } else {
+        
+        $log.error(event.message);
+        defer.reject(event.message);
+        
+        }
+        },{ buffer: true, escape: true} );
+        return defer.promise;
+        }
+
+        service.saveP = function(listprice,salesprice,Idd){
+        var defer = $q.defer();
+        
+        Package_ProductLineItemsController.savePrice(listprice,salesprice,Idd,function(result, event) {
+        if (event.status) {
+        
+        defer.resolve(result);
+        
+        } else {
+        
+        $log.error(event.message);
+        defer.reject(event.message);
+        
+        }
+        },{ buffer: true, escape: true} );
+        return defer.promise;
+        }
+        return service;
+        }]);
+            </script>
+        </html> 
+    
+</apex:page>
